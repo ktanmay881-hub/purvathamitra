@@ -1,0 +1,27 @@
+@login_required
+def view_cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    total_price = sum(item.product.price_per_kg * item.quantity for item in cart_items)
+
+    if request.method == "POST" and request.POST.get('confirm') == 'cod':
+        for item in cart_items:
+            Order.objects.create(
+                vendor=item.product.supplier,  # Supplier is vendor here
+                items=None,  # Not using m2m for now
+                created_at=timezone.now(),
+                remarks="COD Order",
+                status='In Process'
+            )
+
+            # Reduce stock to 0 after ordering
+            item.product.quantity = 0
+            item.product.save()
+            item.delete()
+
+        messages.success(request, "Order placed successfully via Cash on Delivery!")
+        return redirect('my_orders')
+
+    return render(request, 'vendors/view_cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price
+    })

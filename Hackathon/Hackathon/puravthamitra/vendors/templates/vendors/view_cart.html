@@ -1,0 +1,62 @@
+{% extends 'vendors/base.html' %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="text-success">🛒 My Cart</h2>
+  
+  {% if cart_items %}
+  <table class="table table-bordered mt-3 bg-white">
+    <thead class="table-success">
+      <tr>
+        <th>Product</th>
+        <th>Price per kg (₹)</th>
+        <th>Quantity (kg)</th>
+        <th>Total (₹)</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td>{{ item.product.product_name }}</td>
+        <td class="text-center">₹{{ item.product.price_per_kg }}</td>
+        <td class="text-center">{{ item.quantity }}</td>
+        <td class="text-center">₹{{ item.total_price }}</td>
+        <td class="text-center">
+          <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">❌</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="text-end fw-bold fs-5 text-success mb-4">Total: ₹{{ total_price }}</div>
+
+  <!-- Confirm Order & COD -->
+  <div class="text-center">
+    <button class="btn btn-success px-4" id="confirmBtn">✅ Confirm Order</button>
+    
+    <form method="post" action="{% url 'confirm_order' %}" id="codForm" style="display: none;" class="mt-3">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-dark">💵 Cash on Delivery</button>
+    </form>
+
+    <div id="orderConfirmed" class="alert alert-success mt-4 d-none">✅ Order Confirmed!</div>
+  </div>
+
+  {% else %}
+  <div class="alert alert-warning mt-4">Your cart is empty.</div>
+  {% endif %}
+</div>
+
+<script>
+  const confirmBtn = document.getElementById('confirmBtn');
+  const codForm = document.getElementById('codForm');
+  const orderConfirmed = document.getElementById('orderConfirmed');
+
+  confirmBtn.addEventListener('click', () => {
+    codForm.style.display = 'block';
+    confirmBtn.style.display = 'none';
+    orderConfirmed.classList.remove('d-none');
+  });
+</script>
+{% endblock %}

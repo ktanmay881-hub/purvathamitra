@@ -1,0 +1,47 @@
+{% extends 'vendors/base.html' %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4">🛍 Browse Products</h2>
+  <div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ product.product_name }}</h5>
+          <p><strong>Price/kg:</strong> <span class="d-inline-flex align-items-center"><span class="fw-semibold">₹</span><span class="ms-1">{{ product.price_per_kg }}</span></span></p>
+          <form class="add-to-cart-form" data-product-id="{{ product.id }}">
+            <label>Quantity:</label>
+            <input type="number" name="quantity" value="1" min="1" class="form-control mb-2">
+            <button type="submit" class="btn btn-success w-100">Add to Cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.add-to-cart-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const productId = this.dataset.productId;
+      const quantity = this.querySelector('input[name="quantity"]').value;
+
+      fetch(`/add-to-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `quantity=${quantity}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) alert('Added to cart');
+        else alert('Failed to add');
+      });
+    });
+  });
+</script>
+{% endblock %}

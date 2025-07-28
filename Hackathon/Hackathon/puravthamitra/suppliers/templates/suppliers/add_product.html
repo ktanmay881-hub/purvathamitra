@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>➕ Add Product</h2>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <!-- Category Selection -->
+  <div class="mb-3">
+    <label>Category:</label>
+    <select id="category" name="category" class="form-select" required>
+      <option value="">-- Select Category --</option>
+      <option value="Fruits">Fruits</option>
+      <option value="Vegetables">Vegetables</option>
+      <option value="Grains">Grains</option>
+      <option value="Dairy">Dairy</option>
+    </select>
+  </div>
+
+  <!-- Product Name Dropdown (will change dynamically) -->
+  <div class="mb-3">
+    <label>Product Name:</label>
+    <select id="product_select" name="product_name" class="form-select" required>
+      <option value="">-- Select Product --</option>
+    </select>
+  </div>
+
+  <!-- Custom Name Field (only shown if "Other" is selected) -->
+  <div class="mb-3 d-none" id="custom_product_div">
+    <label>Enter Custom Product Name:</label>
+    <input type="text" name="product_name_custom" id="product_name_custom" class="form-control">
+  </div>
+
+  <!-- Quantity -->
+  <div class="mb-3">
+    <label>Quantity (in kg):</label>
+    <input type="number" name="quantity" class="form-control" required>
+  </div>
+
+  <!-- Price -->
+  <div class="mb-3">
+    <label>Price per kg (₹):</label>
+    <input type="number" name="price_per_kg" class="form-control" required>
+  </div>
+
+  <!-- Image -->
+  <div class="mb-3">
+    <label>Photo:</label>
+    <input type="file" name="image" class="form-control">
+  </div>
+
+  <!-- Location -->
+  <div class="mb-3">
+    <label>Location:</label>
+    <input type="text" name="location" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">Upload</button>
+</form>
+
+<!-- Script for category-based product switching -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  const productOptions = {
+    Fruits: [
+      "Apple", "Banana", "Mango", "Orange", "Pineapple", "Papaya", "Guava", "Watermelon", "Muskmelon", "Lychee",
+      "Grapes", "Strawberry", "Pomegranate", "Custard Apple", "Chikoo"
+    ],
+    Vegetables: [
+      "Potato", "Tomato", "Onion", "Carrot", "Cabbage", "Cauliflower", "Spinach", "Coriander", "Green Peas",
+      "Lady Finger", "Brinjal", "Capsicum", "Cucumber", "Pumpkin", "Ginger", "Garlic"
+    ],
+    Grains: [
+      "Wheat", "Rice", "Millet", "Maize", "Barley", "Bajra", "Jowar", "Urad Dal", "Moong Dal", "Toor Dal",
+      "Masoor Dal", "Chana Dal", "Rajma", "Chickpeas"
+    ],
+    Dairy: [
+      "Milk", "Curd", "Paneer", "Ghee", "Butter", "Cheese", "Buttermilk", "Cream", "Khoya"
+    ]
+  };
+
+  $('#category').on('change', function () {
+    const selectedCategory = $(this).val();
+    const productSelect = $('#product_select');
+    productSelect.empty();
+    $('#custom_product_div').addClass('d-none');
+
+    if (productOptions[selectedCategory]) {
+      productSelect.append(`<option value="">-- Select Product --</option>`);
+      productOptions[selectedCategory].forEach(product => {
+        productSelect.append(`<option value="${product}">${product}</option>`);
+      });
+      productSelect.append(`<option value="Other">Other</option>`);
+    } else {
+      productSelect.append(`<option value="">-- Select Category First --</option>`);
+    }
+  });
+
+  $('#product_select').on('change', function () {
+    if ($(this).val() === 'Other') {
+      $('#custom_product_div').removeClass('d-none');
+      $('#product_name_custom').attr('name', 'product_name'); // Rename field for backend to receive
+    } else {
+      $('#custom_product_div').addClass('d-none');
+      $('#product_name_custom').attr('name', 'product_name_custom'); // Hide from POST
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="text-danger">⚠️ Are you sure you want to logout?</h3>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Logout</button>
+    <a href="{% url 'supplier_dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

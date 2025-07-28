@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+  <div class="card shadow-sm border-success">
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0">✏️ Edit Product</h4>
+    </div>
+    <div class="card-body bg-light">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="id_category" class="form-label">Category</label>
+          {{ form.category }}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_product_name" class="form-label">Product Name</label>
+          {{ form.product_name }}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_quantity" class="form-label">Quantity (kg)</label>
+          {{ form.quantity }}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_price_per_kg" class="form-label">Price per kg (₹)</label>
+          {{ form.price_per_kg }}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_location" class="form-label">Location</label>
+          {{ form.location }}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_image" class="form-label">Product Image</label>
+          {{ form.image }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">💾 Save Changes</button>
+          <a href="{% url 'inventory' %}" class="btn btn-outline-secondary">🔙 Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "vendors/base_vendor.html" %}
+{% block content %}
+  <h2>Welcome Vendor 🙌</h2>
+  <p>Monitor your orders and product needs easily.</p>
+
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Total Orders</h5>
+          <p class="card-text fs-3">{{ total_orders }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Completed Orders</h5>
+          <p class="card-text fs-3">{{ completed_orders }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white bg-warning mb-3">
+        <div class="card-body">
+          <h5 class="card-title">In Progress</h5>
+          <p class="card-text fs-3">{{ in_progress_orders }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

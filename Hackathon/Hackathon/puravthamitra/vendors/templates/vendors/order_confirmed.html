@@ -1,0 +1,8 @@
+{% extends 'vendors/base.html' %}
+{% block content %}
+  <div class="text-center mt-5">
+    <h2 class="text-success">✅ Order Confirmed!</h2>
+    <p>Your order ID is <strong>#{{ order.id }}</strong></p>
+    <a href="{% url 'vendor_dashboard' %}" class="btn btn-primary mt-3">Go to Dashboard</a>
+  </div>
+{% endblock %}

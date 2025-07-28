@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>👤 Account</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" id="account-form">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label>First Name:</label>
+    <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}" class="form-control" disabled>
+  </div>
+  <div class="mb-3">
+    <label>Last Name:</label>
+    <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}" class="form-control" disabled>
+  </div>
+  <div class="mb-3">
+    <label>Email:</label>
+    <input type="email" id="email" name="email" value="{{ request.user.email }}" class="form-control" disabled>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-primary" id="edit-btn">🖊️ Edit</button>
+    <button type="submit" class="btn btn-success d-none" id="save-btn">💾 Save</button>
+  </div>
+</form>
+
+<!-- Script to toggle fields -->
+<script>
+  const editBtn = document.getElementById('edit-btn');
+  const saveBtn = document.getElementById('save-btn');
+  const fields = ['first_name', 'last_name', 'email'];
+
+  editBtn.addEventListener('click', () => {
+    fields.forEach(id => document.getElementById(id).disabled = false);
+    editBtn.classList.add('d-none');
+    saveBtn.classList.remove('d-none');
+  });
+</script>
+{% endblock %}

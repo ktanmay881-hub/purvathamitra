@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-success fw-bold">📦 Supplier Dashboard</h2>
+
+  <!-- New Orders Section -->
+  <div class="mb-5">
+    <h4 class="mb-3 text-success">🆕 New Vendor Orders</h4>
+
+    {% for order in new_orders %}
+      <div class="card shadow-sm border-success mb-4" style="background-color: #e9f7ef;">
+        <div class="card-body">
+          <h5 class="card-title fw-bold text-success">{{ order.product_name }}</h5>
+          <p class="mb-1"><i class="bi bi-box-seam me-1"></i><strong>Qty:</strong> {{ order.quantity }} kg</p>
+          <p class="mb-1"><i class="bi bi-currency-rupee me-1"></i><strong>Price/kg:</strong> ₹{{ order.price_per_kg }}</p>
+          <p class="mb-1"><i class="bi bi-geo-alt-fill me-1"></i><strong>Location:</strong> {{ order.location }}</p>
+          <p class="mb-1"><i class="bi bi-telephone-fill me-1"></i><strong>Phone:</strong> {{ order.phone }}</p>
+          <p class="mb-3"><i class="bi bi-calendar-event me-1"></i><strong>Delivery by:</strong> {{ order.delivery_date }}</p>
+          
+          <form method="post" class="d-flex gap-2">
+            {% csrf_token %}
+            <button name="accept" value="{{ order.id }}" class="btn btn-success btn-sm"
+              onclick="return confirm('Confirm to accept this order?')">✅ Accept</button>
+            <button name="reject" value="{{ order.id }}" class="btn btn-outline-danger btn-sm"
+              onclick="return confirm('Are you sure to reject this order?')">❌ Reject</button>
+          </form>
+        </div>
+      </div>
+    {% empty %}
+      <div class="alert alert-warning">No new orders today.</div>
+    {% endfor %}
+  </div>
+
+  <!-- Today's Deliveries Section -->
+  <div>
+    <h4 class="mb-3 text-success">🚚 Today's Deliveries</h4>
+
+    {% for delivery in today_deliveries %}
+      <div class="card shadow-sm border-0 mb-3" style="background-color: #d0f0c0;">
+        <div class="card-body">
+          <h5 class="card-title text-dark fw-bold">{{ delivery.product_name }}</h5>
+          <p class="mb-1"><i class="bi bi-person-check-fill me-1"></i><strong>Delivered To:</strong> {{ delivery.buyer_name }}</p>
+          <p class="mb-0"><i class="bi bi-check2-circle me-1"></i><strong>Status:</strong>
+            {% if delivery.status == 'delivered' %}
+              <span class="badge bg-success">{{ delivery.status|title }}</span>
+            {% else %}
+              <span class="badge bg-secondary">{{ delivery.status|title }}</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    {% empty %}
+      <div class="alert alert-info">No deliveries scheduled for today.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
